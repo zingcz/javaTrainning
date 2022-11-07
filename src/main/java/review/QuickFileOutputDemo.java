@@ -1,7 +1,6 @@
 package review;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -10,7 +9,7 @@ public class QuickFileOutputDemo {
     public static void main(String[] args) throws IOException {
         //快写
         FileOutputStream fos = new FileOutputStream("./quickFileOutput");
-        byte[] b = new byte[1024];
+        byte[] b;
         String sWrite = "this is what i want say";
         b = sWrite.getBytes(StandardCharsets.UTF_8);
         fos.write(b);

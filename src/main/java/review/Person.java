@@ -3,7 +3,6 @@ package review;
 public class Person {
     private String name;
     private int age;
-    private Object RuntimeException;
 
     public void sayMyName(){
         System.out.println(name);
