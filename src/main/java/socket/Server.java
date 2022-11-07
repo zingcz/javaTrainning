@@ -11,12 +11,37 @@ import java.nio.charset.StandardCharsets;
 public class Server {
     private ServerSocket serverSocket;
 
+//对于无法传参——不允许参数或该方法被底层自动执行没有机会输入参数的情况，用类的构造器获取和暂存
+    private class ClientHandler implements Runnable{
+        Socket socket;
+        ClientHandler(Socket socket){
+            this.socket = socket;
+        }
+
+        public void run(){
+            try {
+                InputStream input = socket.getInputStream();
+                InputStreamReader isr = new InputStreamReader(input, StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(isr);
+                String message;
+                while ( (message = br.readLine()) != null){
+                    System.out.println("a client say " + message);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+
+            }
+        }
+    }
 
     public void server(){
         try {
             System.out.println("try to wake up the serve");
             serverSocket = new ServerSocket(8088);
             System.out.println("wake up the serve success");
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,19 +49,15 @@ public class Server {
 
     public void start(){
         try {
-            System.out.println("waiting for client connect");
-            Socket socket = serverSocket.accept();
-            System.out.println("a client connect success");
+            while (true){
+                System.out.println("waiting for client connect");
+                Socket socket = serverSocket.accept();
+                System.out.println("a client connect success");
 
-            InputStream input = socket.getInputStream();
-            InputStreamReader isr = new InputStreamReader(input, StandardCharsets.UTF_8);
-            BufferedReader br = new BufferedReader(isr);
-
-            String message;
-            while ( (message = br.readLine()) != null){
-                System.out.println(message);
+                ClientHandler handler = new ClientHandler(socket);
+                Thread t1 = new Thread(handler);
+                t1.start();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
